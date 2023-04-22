@@ -30,16 +30,16 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class MainGui extends javax.swing.JFrame {
+public class Gui extends javax.swing.JFrame {
     
-    public MainGui() {
+    public Gui() {
         Image img = ImageUtils.getImgFromUrl("https://cdn.discordapp.com/attachments/997440120896639089/1077920680391213086/icon.png", 256, 256);
-        this.setSize(960, 560);
-        this.setResizable(false);
-        this.setIconImage(img);
+        setSize(960, 560);
+        setResizable(false);
+        setIconImage(img);
         initComponents();
         initTable();
-        this.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width  - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2); 
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width  - getSize().width) / 2, (Toolkit.getDefaultToolkit().getScreenSize().height - getSize().height) / 2);
     }
     
     @SuppressWarnings("unchecked")
@@ -538,7 +538,7 @@ public class MainGui extends javax.swing.JFrame {
         FlatMacDarkLaf.setup();
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainGui().setVisible(true);
+                new Gui().setVisible(true);
             }
         });
     }

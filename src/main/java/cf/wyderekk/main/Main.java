@@ -6,6 +6,6 @@ public class Main {
 
     public static void main(String[] args) {
         SQLHandler.connect();
-        MainGui.initializeGui();
+        Gui.initializeGui();
     }
 }

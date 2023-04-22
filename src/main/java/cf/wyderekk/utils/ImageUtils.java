@@ -8,25 +8,22 @@ import javax.imageio.ImageIO;
 public class ImageUtils {
     
     public static Image getImgFromUrl(String url, int width, int height) {
-        Image image;
         try {
             URL imgURL = new URL(url);
-            image = ImageIO.read(imgURL);
-        } catch (IOException ex) {
-            return null;
+            return ImageIO.read(imgURL).getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        } catch (IOException ignored)  {
+
         }
-        Image newImage = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-        return newImage;
+        return null;
     }
-    
+
     public static Image getImgFromUrl(String url) {
-        Image image;
         try {
             URL imgURL = new URL(url);
-            image = ImageIO.read(imgURL);
-        } catch (IOException ex) {
-            return null;
+            return ImageIO.read(imgURL);
+        } catch (IOException ignored)  {
+
         }
-        return image;
+        return null;
     }
 }

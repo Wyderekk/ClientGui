@@ -60,8 +60,13 @@ public class SQLHandler {
     public static void removeUser(Client client) {
         PreparedStatement ps;
         try {
-            ps = SQLHandler.con.prepareStatement("DELETE FROM users WHERE name='" + client.getName() + "' AND surname='" + client.getSurname()
-                    + "' AND address='" + client.getAddress() + "' AND postalcode='" + client.getPostalCode() + "' AND phone_number='" + client.getPhoneNumber() + "'");
+            String sql = "DELETE FROM users WHERE name=? AND surname=? AND address=? AND postalcode=? AND phone_number=?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, client.getName());
+            ps.setString(2, client.getSurname());
+            ps.setString(3, client.getAddress());
+            ps.setString(4, client.getPostalCode());
+            ps.setString(5, client.getPhoneNumber());
             ps.executeUpdate();
         } catch(SQLException e) {
             e.printStackTrace();
