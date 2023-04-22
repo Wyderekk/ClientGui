@@ -210,6 +210,7 @@ public class SQLHandler {
     }
     
     private static void createTable() {
+        Config.createDatabase();
         PreparedStatement ps;
         try {
             ps = con.prepareStatement("CREATE TABLE IF NOT EXISTS users (name TEXT, surname TEXT, address TEXT, postalcode TEXT, phone_number TEXT, id TEXT)");
