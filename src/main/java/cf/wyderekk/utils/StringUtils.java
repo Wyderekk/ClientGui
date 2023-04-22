@@ -6,8 +6,8 @@ public class StringUtils {
         String t = text;
         boolean found = false;
         char[] chars = t.toCharArray();
-        for(char c : chars){
-            if(Character.isDigit(c)){
+        for(char c : chars) {
+            if(Character.isDigit(c)) {
                 found = true;
             }
         }
@@ -50,12 +50,10 @@ public class StringUtils {
     }
     
     public static boolean validPhoneNumber(String phoneNumber) {
-        if(phoneNumber.length() != 9 || containsLetter(phoneNumber)) {
+        if (phoneNumber.length() != 9 || containsLetter(phoneNumber)) {
             return true;
         } else {
             return false;
         }
     }
-    
-    
 }
