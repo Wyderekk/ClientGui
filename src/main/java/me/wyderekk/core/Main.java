@@ -1,6 +1,7 @@
-package cf.wyderekk.main;
+package me.wyderekk.core;
 
-import cf.wyderekk.database.SQLHandler;
+import me.wyderekk.database.SQLHandler;
+import me.wyderekk.gui.Gui;
 
 public class Main {
 

@@ -1,4 +1,4 @@
-package cf.wyderekk.config;
+package me.wyderekk.config;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +17,7 @@ public class Config {
         makeFolder();
         try {
             if(!file.exists()) {
-                boolean create = file.createNewFile();
+                file.createNewFile();
                 createNewConfig(file);
                 getPath();
             } else {
@@ -36,7 +36,7 @@ public class Config {
         makeFolder();
         try {
             if(!databaseFile.exists()) {
-                boolean create = databaseFile.createNewFile();
+                databaseFile.createNewFile();
             }
         } catch (IOException ignored) {
 

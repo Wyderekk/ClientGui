@@ -1,11 +1,10 @@
-package cf.wyderekk.utils;
+package me.wyderekk.utils;
 
 public class StringUtils {
     
     public static boolean containsNumber(String text) {
-        String t = text;
         boolean found = false;
-        char[] chars = t.toCharArray();
+        char[] chars = text.toCharArray();
         for(char c : chars) {
             if(Character.isDigit(c)) {
                 found = true;
@@ -15,9 +14,8 @@ public class StringUtils {
     }
     
     public static boolean containsLetter(String text) {
-        String t = text;
         boolean found = false;
-        for (char ch : t.toCharArray()) {
+        for (char ch : text.toCharArray()) {
             if (Character.isLetter(ch)) {
                 found = true;
             }  
@@ -26,34 +24,18 @@ public class StringUtils {
     }
     
     public static boolean validName(String name) {
-        if(containsNumber(name)) {
-            return true;
-        } else {
-            return false;
-        }
+        return containsNumber(name);
     }
     
     public static boolean validSurname(String surname) {
-        if(containsNumber(surname)) {
-            return true;
-        } else {
-            return false;
-        }
+        return containsNumber(surname);
     }
     
     public static boolean validPostalCode(String postalCode) {
-        if(postalCode.length() != 6 || containsLetter(postalCode)){
-            return true;
-        } else {
-            return false;
-        }
+        return postalCode.length() != 6 || containsLetter(postalCode);
     }
     
     public static boolean validPhoneNumber(String phoneNumber) {
-        if (phoneNumber.length() != 9 || containsLetter(phoneNumber)) {
-            return true;
-        } else {
-            return false;
-        }
+        return phoneNumber.length() != 9 || containsLetter(phoneNumber);
     }
 }

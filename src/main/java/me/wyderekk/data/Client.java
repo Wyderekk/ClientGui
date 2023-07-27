@@ -1,9 +1,6 @@
-package cf.wyderekk.main;
+package me.wyderekk.data;
 
-import cf.wyderekk.database.SQLHandler;
-import java.awt.Component;
 import java.util.UUID;
-import javax.swing.JOptionPane;
 
 public class Client {
 
@@ -12,22 +9,7 @@ public class Client {
     private String address;
     private String postalCode;
     private String phoneNumber;
-    private String id;
-
-    public static void add(Component parentComponent, String name, String surname, String address, String postalCode, String phoneNumber) {
-        if(SQLHandler.findUserByPhoneNumber(phoneNumber) != null) {
-            JOptionPane.showMessageDialog(parentComponent, "Użytkownik z tym numerem telefonu juz istnieje!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            Client client = new Client(name, surname, address, postalCode, phoneNumber);
-            SQLHandler.createUser(client);
-            JOptionPane.showMessageDialog(parentComponent, "Pomyślnie utworzono uzytkownika!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-    
-    public static void remove(Component parentComponent, String phoneNumber) {
-        SQLHandler.removeUser(SQLHandler.findUserByPhoneNumber(phoneNumber));
-        JOptionPane.showMessageDialog(parentComponent, "Pomyślnie usunięto uzytkownika!", "Success", JOptionPane.INFORMATION_MESSAGE);
-    }
+    private final String id;
     
     public Client(String name, String surname, String address, String postalCode, String phoneNumber) {
         this.name = name;
@@ -45,10 +27,6 @@ public class Client {
         this.postalCode = postalCode;
         this.phoneNumber = phoneNumber;
         this.id = id;
-    }
-
-    public String getId() {
-        return id;
     }
     
     public String getPhoneNumber() {
@@ -90,4 +68,9 @@ public class Client {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getId() {
+        return id;
+    }
+
 }

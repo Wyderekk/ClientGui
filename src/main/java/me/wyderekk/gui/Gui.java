@@ -1,9 +1,11 @@
-package cf.wyderekk.main;
+package me.wyderekk.gui;
 
-import cf.wyderekk.config.Config;
-import cf.wyderekk.database.SQLHandler;
-import cf.wyderekk.utils.ImageUtils;
-import cf.wyderekk.utils.StringUtils;
+import me.wyderekk.config.Config;
+import me.wyderekk.data.Client;
+import me.wyderekk.data.ClientManager;
+import me.wyderekk.database.SQLHandler;
+import me.wyderekk.utils.ImageUtils;
+import me.wyderekk.utils.StringUtils;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.EventQueue;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -26,7 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Gui extends javax.swing.JFrame {
     
     public Gui() {
-        Image img = ImageUtils.getImgFromUrl("https://cdn.discordapp.com/attachments/997440120896639089/1077920680391213086/icon.png", 256, 256);
+        Image img = ImageUtils.downloadImage("https://cdn.discordapp.com/attachments/997440120896639089/1077920680391213086/icon.png", 256, 256);
         setSize(960, 560);
         setResizable(false);
         setIconImage(img);
@@ -398,7 +401,7 @@ public class Gui extends javax.swing.JFrame {
         } else if(StringUtils.validPostalCode(postalCode)){
             JOptionPane.showMessageDialog(rootPane, "Bledny kod pocztowy!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            Client.add(rootPane, name, surname, address, postalCode, phoneNumber);
+            ClientManager.add(rootPane, name, surname, address, postalCode, phoneNumber);
             nameField.setText("");
             surnameField.setText("");
             addressField.setText("");
@@ -414,7 +417,7 @@ public class Gui extends javax.swing.JFrame {
         } else if(phoneNumber.length() != 9 || StringUtils.containsLetter(phoneNumber)) {
             JOptionPane.showMessageDialog(rootPane, "Podany numer jest bledny!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            Client.remove(rootPane, phoneNumber);
+            ClientManager.remove(rootPane, phoneNumber);
             phoneNumber2.setText("");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -460,22 +463,22 @@ public class Gui extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if (SwingUtilities.isRightMouseButton(evt)) {
-        JTable source = (JTable) evt.getSource();
-        int row = source.rowAtPoint(evt.getPoint());
-        int column = source.columnAtPoint(evt.getPoint());
-        if (!source.isRowSelected(row))
-            source.changeSelection(row, column, false, false);
-        JPopupMenu popup = new JPopupMenu();
-        JMenuItem copyItem = new JMenuItem("Kopiuj");
-        copyItem.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+            JTable source = (JTable) evt.getSource();
+            int row = source.rowAtPoint(evt.getPoint());
+            int column = source.columnAtPoint(evt.getPoint());
+            if (!source.isRowSelected(row)) {
+                source.changeSelection(row, column, false, false);
+            }
+            JPopupMenu popup = new JPopupMenu();
+            JMenuItem copyItem = new JMenuItem("Kopiuj");
+
+            copyItem.addActionListener(e -> {
                 StringSelection stringSelection = new StringSelection(jTable1.getValueAt(row, column).toString());
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
-            }
-        });
-        popup.add(copyItem);
-        popup.show(evt.getComponent(), evt.getX(), evt.getY());
+            });
+            popup.add(copyItem);
+            popup.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -513,8 +516,8 @@ public class Gui extends javax.swing.JFrame {
                 }
                 workbook.write(fos);
                 workbook.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -530,11 +533,7 @@ public class Gui extends javax.swing.JFrame {
     
     public static void initializeGui() {
         FlatMacDarkLaf.setup();
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Gui().setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new Gui().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,8 +1,8 @@
-package cf.wyderekk.database;
+package me.wyderekk.database;
 
-import cf.wyderekk.config.Config;
-import cf.wyderekk.main.Client;
-import cf.wyderekk.utils.StringUtils;
+import me.wyderekk.config.Config;
+import me.wyderekk.data.Client;
+import me.wyderekk.utils.StringUtils;
 import java.awt.Component;
 import java.sql.*;
 import java.util.logging.Level;

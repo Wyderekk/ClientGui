@@ -13,7 +13,7 @@
                 <exec.vmArgs></exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.appArgs></exec.appArgs>
-                <exec.mainClass>cf.wyderekk.main.Main</exec.mainClass>
+                <exec.mainClass>me.wyderekk.core.Main</exec.mainClass>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
