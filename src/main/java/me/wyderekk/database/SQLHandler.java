@@ -12,24 +12,28 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class SQLHandler {
-    
-    public static Connection con;
-    
+
+    private static Connection con;
+
     public static void connect() {
         String URL = "jdbc:sqlite:" + Config.getPath();
         try {
             Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection(URL);
             createTable();
-        } catch(Exception e) {
+            Runtime.getRuntime().addShutdownHook(new Thread(SQLHandler::disconnect));
+        } catch (Exception e) {
+            // Handle exception properly, e.g., log it
             e.printStackTrace();
         }
     }
-    
+
     public static void disconnect() {
         try {
-            con.close();
-        } catch(SQLException e) {
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -60,13 +64,9 @@ public class SQLHandler {
     public static void removeUser(Client client) {
         PreparedStatement ps;
         try {
-            String sql = "DELETE FROM users WHERE name=? AND surname=? AND address=? AND postalcode=? AND phone_number=?";
+            String sql = "DELETE FROM users WHERE phone_number = ?";
             ps = con.prepareStatement(sql);
-            ps.setString(1, client.getName());
-            ps.setString(2, client.getSurname());
-            ps.setString(3, client.getAddress());
-            ps.setString(4, client.getPostalCode());
-            ps.setString(5, client.getPhoneNumber());
+            ps.setString(1, client.getPhoneNumber());
             ps.executeUpdate();
         } catch(SQLException e) {
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class SQLHandler {
     
     public static Client findUserByPhoneNumber(String phoneNumber) {
         PreparedStatement ps;
-        String sql = "SELECT name, surname, address, postalcode, phone_number, id FROM users WHERE phone_number=?";
+        String sql = "SELECT * FROM users WHERE phone_number=?";
         try {
             ps = con.prepareStatement(sql);
             ps.setString(1, phoneNumber);
@@ -187,7 +187,7 @@ public class SQLHandler {
 
     public void getAllUsers(JTable table)  {
         try {
-            String query = "SELECT name, surname, postalcode, phone_number, id FROM users";
+            String query = "SELECT * FROM users";
             PreparedStatement statement = con.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             DefaultTableModel model = new DefaultTableModel(new Object[]{"Imię", "Nazwisko", "Kod pocztowy", "Numer Telefonu", "ID"}, 0);
@@ -208,15 +208,14 @@ public class SQLHandler {
             Logger.getLogger(SQLHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private static void createTable() {
         Config.createDatabase();
-        PreparedStatement ps;
-        try {
-            ps = con.prepareStatement("CREATE TABLE IF NOT EXISTS users (name TEXT, surname TEXT, address TEXT, postalcode TEXT, phone_number TEXT, id TEXT)");
+        try (PreparedStatement ps = con.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS users (name TEXT, surname TEXT, address TEXT, postalcode TEXT, phone_number TEXT, id TEXT)"
+        )) {
             ps.execute();
-            ps.close();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
