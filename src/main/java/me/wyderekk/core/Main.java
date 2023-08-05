@@ -9,4 +9,5 @@ public class Main {
         SQLHandler.connect();
         Gui.initializeGui();
     }
+
 }

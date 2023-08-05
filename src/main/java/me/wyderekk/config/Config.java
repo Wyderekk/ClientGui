@@ -9,19 +9,19 @@ import java.util.Scanner;
 public class Config {
 
     private static final String homeDirectory = System.getProperty("user.home");
-    private static final File folder = new File(homeDirectory, ".config2");
-    private static final File file = new File(folder, "config.txt");
-    private static final File databaseFile = new File(folder, "database.db");
+    private static final File configFolder = new File(homeDirectory, ".config2");
+    private static final File configFile = new File(configFolder, "config.txt");
+    private static final File databaseFile = new File(configFile, "database.db");
 
     public static String getPath() {
-        makeFolder();
+        createFolder();
         try {
-            if(!file.exists()) {
-                file.createNewFile();
-                createNewConfig(file);
+            if(!configFile.exists()) {
+                configFile.createNewFile();
+                createNewConfig();
                 getPath();
             } else {
-                Scanner sc = new Scanner(file);
+                Scanner sc = new Scanner(configFile);
                 if(sc.hasNext()) {
                     return sc.nextLine().split("=")[1];
                 }
@@ -29,11 +29,11 @@ public class Config {
         } catch (IOException ignored) {
 
         }
-        return folder + "\\database.db";
+        return configFolder + "\\database.db";
     }
 
     public static void createDatabase() {
-        makeFolder();
+        createFolder();
         try {
             if(!databaseFile.exists()) {
                 databaseFile.createNewFile();
@@ -43,17 +43,17 @@ public class Config {
         }
     }
 
-    private static void createNewConfig(File file) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.append("path=").append(folder.toString()).append("\\database.db");
+    private static void createNewConfig() {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(configFile))) {
+            bufferedWriter.append("path=").append(configFolder.toString()).append("\\database.db");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void makeFolder() {
-        if(!folder.exists()) {
-            boolean create = folder.mkdir();
+    private static void createFolder() {
+        if(!configFolder.exists()) {
+            configFolder.mkdir();
         }
     }
 }
