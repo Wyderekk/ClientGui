@@ -23,7 +23,6 @@ public class SQLHandler {
             createTable();
             Runtime.getRuntime().addShutdownHook(new Thread(SQLHandler::disconnect));
         } catch (Exception e) {
-            // Handle exception properly, e.g., log it
             e.printStackTrace();
         }
     }
