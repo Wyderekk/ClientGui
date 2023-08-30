@@ -13,13 +13,13 @@ import javax.swing.table.DefaultTableModel;
 
 public class SQLHandler {
 
-    private static Connection con;
+    private static Connection CON;
 
     public static void connect() {
         String URL = "jdbc:sqlite:" + Config.getPath();
         try {
             Class.forName("org.sqlite.JDBC");
-            con = DriverManager.getConnection(URL);
+            CON = DriverManager.getConnection(URL);
             createTable();
             Runtime.getRuntime().addShutdownHook(new Thread(SQLHandler::disconnect));
         } catch (Exception e) {
@@ -29,8 +29,8 @@ public class SQLHandler {
 
     public static void disconnect() {
         try {
-            if (con != null) {
-                con.close();
+            if (CON != null) {
+                CON.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -38,13 +38,10 @@ public class SQLHandler {
     }
     
     public static void createUser(Client client) {
-        PreparedStatement ps;
-        try {
-            Statement stmt = con.createStatement();
+        try (PreparedStatement ps = CON.prepareStatement("INSERT INTO users (name, surname, address, postalcode, phone_number, id) VALUES (?, ?, ?, ?, ?, ?)")) {
+            Statement stmt = CON.createStatement();
             ResultSet result = stmt.executeQuery("SELECT phone_number FROM users WHERE phone_number='" + client.getPhoneNumber() + "'");
             if (!result.next()) {
-                String sql = "INSERT INTO users (name, surname, address, postalcode, phone_number, id) VALUES (?, ?, ?, ?, ?, ?)";
-                ps = SQLHandler.con.prepareStatement(sql);
                 ps.setString(1, client.getName());
                 ps.setString(2, client.getSurname());
                 ps.setString(3, client.getAddress());
@@ -61,10 +58,7 @@ public class SQLHandler {
     }
     
     public static void removeUser(Client client) {
-        PreparedStatement ps;
-        try {
-            String sql = "DELETE FROM users WHERE phone_number = ?";
-            ps = con.prepareStatement(sql);
+        try (PreparedStatement ps = CON.prepareStatement("DELETE FROM users WHERE phone_number = ?")) {
             ps.setString(1, client.getPhoneNumber());
             ps.executeUpdate();
         } catch(SQLException e) {
@@ -73,10 +67,7 @@ public class SQLHandler {
     }
 
     public static void updateUser(Client client) {
-        PreparedStatement ps;
-        try {
-            String sql = "UPDATE users SET name = ?, surname = ?, address = ?, postalcode = ?, phone_number = ? WHERE phone_number = ?";
-            ps = con.prepareStatement(sql);
+        try (PreparedStatement ps = CON.prepareStatement("UPDATE users SET name = ?, surname = ?, address = ?, postalcode = ?, phone_number = ? WHERE phone_number = ?")) {
             ps.setString(1, client.getName());
             ps.setString(2, client.getSurname());
             ps.setString(3, client.getAddress());
@@ -90,10 +81,7 @@ public class SQLHandler {
     }
     
     public static void updateUser(Client client, String newPhoneNumber) {
-        PreparedStatement ps;
-        try {
-            String sql = "UPDATE users SET name = ?, surname = ?, address = ?, postalcode = ?, phone_number = ? WHERE phone_number = ?";
-            ps = con.prepareStatement(sql);
+        try (PreparedStatement ps = CON.prepareStatement("UPDATE users SET name = ?, surname = ?, address = ?, postalcode = ?, phone_number = ? WHERE phone_number = ?")) {
             ps.setString(1, client.getName());
             ps.setString(2, client.getSurname());
             ps.setString(3, client.getAddress());
@@ -107,10 +95,7 @@ public class SQLHandler {
     }
 
     public static void clearTable() {
-        String deleteSql = "DELETE FROM users";
-        PreparedStatement ps;
-        try {
-            ps = SQLHandler.con.prepareStatement(deleteSql);
+        try (PreparedStatement ps = CON.prepareStatement("DELETE * FROM users")) {
             ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,10 +152,7 @@ public class SQLHandler {
     }
     
     public static Client findUserByPhoneNumber(String phoneNumber) {
-        PreparedStatement ps;
-        String sql = "SELECT * FROM users WHERE phone_number=?";
-        try {
-            ps = con.prepareStatement(sql);
+        try (PreparedStatement ps = CON.prepareStatement("SELECT * FROM users WHERE phone_number=?")) {
             ps.setString(1, phoneNumber);
             ResultSet result = ps.executeQuery();
             if (result.next()) {
@@ -185,10 +167,8 @@ public class SQLHandler {
     }
 
     public void getAllUsers(JTable table)  {
-        try {
-            String query = "SELECT * FROM users";
-            PreparedStatement statement = con.prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement ps = CON.prepareStatement("SELECT * FROM users")) {
+            ResultSet resultSet = ps.executeQuery();
             DefaultTableModel model = new DefaultTableModel(new Object[]{"Imię", "Nazwisko", "Kod pocztowy", "Numer Telefonu", "ID"}, 0);
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
@@ -210,9 +190,7 @@ public class SQLHandler {
 
     private static void createTable() {
         Config.createDatabase();
-        try (PreparedStatement ps = con.prepareStatement(
-                "CREATE TABLE IF NOT EXISTS users (name TEXT, surname TEXT, address TEXT, postalcode TEXT, phone_number TEXT, id TEXT)"
-        )) {
+        try (PreparedStatement ps = CON.prepareStatement("CREATE TABLE IF NOT EXISTS users (name TEXT, surname TEXT, address TEXT, postalcode TEXT, phone_number TEXT, id TEXT)")) {
             ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();
